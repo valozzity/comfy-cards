@@ -1,0 +1,177 @@
+{
+  "100": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "49ff5041e8e976b682b22e82d7f98d20948e2171eba81a62a31d04b2f3a995ac.png"
+    }
+  },
+  "210": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "qwen_image_edit_2511_bf16.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "211": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen_2.5_vl_7b.safetensors",
+      "type": "qwen_image",
+      "device": "default"
+    }
+  },
+  "212": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "qwen_image_vae.safetensors"
+    }
+  },
+  "213": {
+    "class_type": "ModelSamplingAuraFlow",
+    "inputs": {
+      "shift": 3.1,
+      "model": [
+        "210",
+        0
+      ]
+    }
+  },
+  "214": {
+    "class_type": "CFGNorm",
+    "inputs": {
+      "strength": 1.0,
+      "model": [
+        "213",
+        0
+      ]
+    }
+  },
+  "216": {
+    "class_type": "FluxKontextImageScale",
+    "inputs": {
+      "image": [
+        "100",
+        0
+      ]
+    }
+  },
+  "217": {
+    "class_type": "TextEncodeQwenImageEditPlus",
+    "inputs": {
+      "prompt": "Enhance this artwork for print: clean, crisp, even black outlines, smooth flat color fills, sharper details and no noise or compression artifacts. Keep exactly the same character, pose, colors, proportions and composition. Plain flat light grey background. No text.",
+      "clip": [
+        "211",
+        0
+      ],
+      "vae": [
+        "212",
+        0
+      ],
+      "image1": [
+        "216",
+        0
+      ]
+    }
+  },
+  "218": {
+    "class_type": "TextEncodeQwenImageEditPlus",
+    "inputs": {
+      "prompt": "",
+      "clip": [
+        "211",
+        0
+      ],
+      "vae": [
+        "212",
+        0
+      ],
+      "image1": [
+        "216",
+        0
+      ]
+    }
+  },
+  "219": {
+    "class_type": "FluxKontextMultiReferenceLatentMethod",
+    "inputs": {
+      "reference_latents_method": "index_timestep_zero",
+      "conditioning": [
+        "217",
+        0
+      ]
+    }
+  },
+  "220": {
+    "class_type": "FluxKontextMultiReferenceLatentMethod",
+    "inputs": {
+      "reference_latents_method": "index_timestep_zero",
+      "conditioning": [
+        "218",
+        0
+      ]
+    }
+  },
+  "221": {
+    "class_type": "VAEEncode",
+    "inputs": {
+      "pixels": [
+        "216",
+        0
+      ],
+      "vae": [
+        "212",
+        0
+      ]
+    }
+  },
+  "222": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": 9001,
+      "steps": 40,
+      "cfg": 4.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0,
+      "model": [
+        "214",
+        0
+      ],
+      "positive": [
+        "219",
+        0
+      ],
+      "negative": [
+        "220",
+        0
+      ],
+      "latent_image": [
+        "221",
+        0
+      ]
+    }
+  },
+  "223": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "222",
+        0
+      ],
+      "vae": [
+        "212",
+        0
+      ]
+    }
+  },
+  "900": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "CC/edit",
+      "images": [
+        "223",
+        0
+      ]
+    }
+  }
+}

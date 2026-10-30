@@ -1,0 +1,1816 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "flux-2-klein-4b.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen_3_4b.safetensors",
+      "type": "flux2",
+      "device": "default"
+    }
+  },
+  "3": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "flux2-vae.safetensors"
+    }
+  },
+  "4": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "euler"
+    }
+  },
+  "5": {
+    "class_type": "Flux2Scheduler",
+    "inputs": {
+      "steps": 4,
+      "width": 1056,
+      "height": 1440
+    }
+  },
+  "6": {
+    "class_type": "EmptyFlux2LatentImage",
+    "inputs": {
+      "width": 1056,
+      "height": 1440,
+      "batch_size": 1
+    }
+  },
+  "16": {
+    "class_type": "RMBG",
+    "inputs": {
+      "model": "BEN2",
+      "sensitivity": 1.0,
+      "process_res": 1024,
+      "mask_blur": 0,
+      "mask_offset": 0,
+      "invert_output": false,
+      "refine_foreground": true,
+      "background": "Alpha",
+      "background_color": "#222222",
+      "image": [
+        "208",
+        0
+      ]
+    }
+  },
+  "20": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "Flat cel-shaded cartoon background art for a 1990s collectible trading card. A radial burst of electric blue lightning bolts and violet plasma energy explodes outward from the exact center of the frame, with forked bolts, round glowing sparks and small star-shaped particles spread evenly to the edges. Colors are solid electric blue, violet and white on a deep navy field that darkens to black at the corners. The image contains only abstract energy shapes, with no characters, objects, letters or numbers.",
+      "clip": [
+        "2",
+        0
+      ]
+    }
+  },
+  "21": {
+    "class_type": "ConditioningZeroOut",
+    "inputs": {
+      "conditioning": [
+        "20",
+        0
+      ]
+    }
+  },
+  "22": {
+    "class_type": "CFGGuider",
+    "inputs": {
+      "cfg": 1,
+      "model": [
+        "1",
+        0
+      ],
+      "positive": [
+        "20",
+        0
+      ],
+      "negative": [
+        "21",
+        0
+      ]
+    }
+  },
+  "23": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 1337
+    }
+  },
+  "24": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "23",
+        0
+      ],
+      "guider": [
+        "22",
+        0
+      ],
+      "sampler": [
+        "4",
+        0
+      ],
+      "sigmas": [
+        "5",
+        0
+      ],
+      "latent_image": [
+        "6",
+        0
+      ]
+    }
+  },
+  "25": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "24",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    }
+  },
+  "30": {
+    "class_type": "CreateShapeMask",
+    "inputs": {
+      "shape": "square",
+      "frames": 1,
+      "location_x": 528,
+      "location_y": 472,
+      "grow": 0,
+      "frame_width": 1056,
+      "frame_height": 1440,
+      "shape_width": 832,
+      "shape_height": 576
+    }
+  },
+  "31": {
+    "class_type": "CreateShapeMask",
+    "inputs": {
+      "shape": "square",
+      "frames": 1,
+      "location_x": 528,
+      "location_y": 720,
+      "grow": 0,
+      "frame_width": 1056,
+      "frame_height": 1440,
+      "shape_width": 960,
+      "shape_height": 1344
+    }
+  },
+  "32": {
+    "class_type": "SolidMask",
+    "inputs": {
+      "value": 1.0,
+      "width": 1056,
+      "height": 1440
+    }
+  },
+  "33": {
+    "class_type": "MaskComposite",
+    "inputs": {
+      "x": 0,
+      "y": 0,
+      "operation": "subtract",
+      "destination": [
+        "31",
+        0
+      ],
+      "source": [
+        "30",
+        0
+      ]
+    }
+  },
+  "34": {
+    "class_type": "CreateShapeMask",
+    "inputs": {
+      "shape": "square",
+      "frames": 1,
+      "location_x": 528,
+      "location_y": 136,
+      "grow": 0,
+      "frame_width": 1056,
+      "frame_height": 1440,
+      "shape_width": 832,
+      "shape_height": 80
+    }
+  },
+  "40": {
+    "class_type": "EmptyImage",
+    "inputs": {
+      "width": 1056,
+      "height": 1440,
+      "batch_size": 1,
+      "color": 0
+    }
+  },
+  "41": {
+    "class_type": "ImageCompositeMasked",
+    "inputs": {
+      "x": 0,
+      "y": 0,
+      "resize_source": false,
+      "destination": [
+        "40",
+        0
+      ],
+      "source": [
+        "142",
+        0
+      ],
+      "mask": [
+        "32",
+        0
+      ]
+    }
+  },
+  "43": {
+    "class_type": "EmptyImage",
+    "inputs": {
+      "width": 1056,
+      "height": 1440,
+      "batch_size": 1,
+      "color": 13938487
+    }
+  },
+  "44": {
+    "class_type": "ImageCompositeMasked",
+    "inputs": {
+      "x": 0,
+      "y": 0,
+      "resize_source": false,
+      "destination": [
+        "41",
+        0
+      ],
+      "source": [
+        "156",
+        0
+      ],
+      "mask": [
+        "181",
+        0
+      ]
+    }
+  },
+  "45": {
+    "class_type": "ImageCompositeMasked",
+    "inputs": {
+      "x": 0,
+      "y": 0,
+      "resize_source": false,
+      "destination": [
+        "44",
+        0
+      ],
+      "source": [
+        "400",
+        0
+      ],
+      "mask": [
+        "180",
+        0
+      ]
+    }
+  },
+  "46": {
+    "class_type": "EmptyImage",
+    "inputs": {
+      "width": 1056,
+      "height": 1440,
+      "batch_size": 1,
+      "color": 11736091
+    }
+  },
+  "47": {
+    "class_type": "ImageCompositeMasked",
+    "inputs": {
+      "x": 0,
+      "y": 0,
+      "resize_source": false,
+      "destination": [
+        "45",
+        0
+      ],
+      "source": [
+        "169",
+        0
+      ],
+      "mask": [
+        "182",
+        0
+      ]
+    }
+  },
+  "48": {
+    "class_type": "DrawText+",
+    "inputs": {
+      "text": " ",
+      "font": "ShareTechMono-Regular.ttf",
+      "size": 104,
+      "color": "#FFFFFF",
+      "background_color": "#00000000",
+      "shadow_distance": 0,
+      "shadow_blur": 0,
+      "shadow_color": "#000000",
+      "horizontal_align": "center",
+      "vertical_align": "center",
+      "offset_x": 0,
+      "offset_y": 0,
+      "img_composite": [
+        "40",
+        0
+      ]
+    }
+  },
+  "49": {
+    "class_type": "EmptyImage",
+    "inputs": {
+      "width": 1056,
+      "height": 1440,
+      "batch_size": 1,
+      "color": 16777215
+    }
+  },
+  "50": {
+    "class_type": "ImageCompositeMasked",
+    "inputs": {
+      "x": 0,
+      "y": 0,
+      "resize_source": false,
+      "destination": [
+        "47",
+        0
+      ],
+      "source": [
+        "177",
+        0
+      ],
+      "mask": [
+        "183",
+        0
+      ]
+    }
+  },
+  "53": {
+    "class_type": "InvertMask",
+    "inputs": {
+      "mask": [
+        "157",
+        0
+      ]
+    }
+  },
+  "54": {
+    "class_type": "JoinImageWithAlpha",
+    "inputs": {
+      "image": [
+        "114",
+        0
+      ],
+      "alpha": [
+        "53",
+        0
+      ]
+    }
+  },
+  "55": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "CC/00_composite",
+      "images": [
+        "54",
+        0
+      ]
+    }
+  },
+  "60": {
+    "class_type": "InvertMask",
+    "inputs": {
+      "mask": [
+        "32",
+        0
+      ]
+    }
+  },
+  "61": {
+    "class_type": "JoinImageWithAlpha",
+    "inputs": {
+      "alpha": [
+        "60",
+        0
+      ],
+      "image": [
+        "142",
+        0
+      ]
+    }
+  },
+  "62": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "CC/L1_fx",
+      "images": [
+        "61",
+        0
+      ]
+    }
+  },
+  "64": {
+    "class_type": "JoinImageWithAlpha",
+    "inputs": {
+      "image": [
+        "156",
+        0
+      ],
+      "alpha": [
+        "185",
+        0
+      ]
+    }
+  },
+  "65": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "CC/L2_frame",
+      "images": [
+        "64",
+        0
+      ]
+    }
+  },
+  "66": {
+    "class_type": "InvertMask",
+    "inputs": {
+      "mask": [
+        "180",
+        0
+      ]
+    }
+  },
+  "67": {
+    "class_type": "JoinImageWithAlpha",
+    "inputs": {
+      "image": [
+        "400",
+        0
+      ],
+      "alpha": [
+        "66",
+        0
+      ]
+    }
+  },
+  "68": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "CC/L3_subject",
+      "images": [
+        "67",
+        0
+      ]
+    }
+  },
+  "70": {
+    "class_type": "JoinImageWithAlpha",
+    "inputs": {
+      "image": [
+        "169",
+        0
+      ],
+      "alpha": [
+        "186",
+        0
+      ]
+    }
+  },
+  "71": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "CC/L4_banner",
+      "images": [
+        "70",
+        0
+      ]
+    }
+  },
+  "73": {
+    "class_type": "JoinImageWithAlpha",
+    "inputs": {
+      "image": [
+        "177",
+        0
+      ],
+      "alpha": [
+        "187",
+        0
+      ]
+    }
+  },
+  "74": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "CC/L5_text",
+      "images": [
+        "73",
+        0
+      ]
+    }
+  },
+  "81": {
+    "class_type": "MaskToImage",
+    "inputs": {
+      "mask": [
+        "133",
+        0
+      ]
+    }
+  },
+  "82": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "CC/P1_foil",
+      "images": [
+        "81",
+        0
+      ]
+    }
+  },
+  "83": {
+    "class_type": "MaskToImage",
+    "inputs": {
+      "mask": [
+        "157",
+        0
+      ]
+    }
+  },
+  "84": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "CC/P2_diecut",
+      "images": [
+        "83",
+        0
+      ]
+    }
+  },
+  "90": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "CC/src_subject",
+      "images": [
+        "208",
+        0
+      ]
+    }
+  },
+  "100": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "49ff5041e8e976b682b22e82d7f98d20948e2171eba81a62a31d04b2f3a995ac.png"
+    }
+  },
+  "101": {
+    "class_type": "ImageResizeKJv2",
+    "inputs": {
+      "width": 832,
+      "height": 576,
+      "upscale_method": "lanczos",
+      "keep_proportion": "pad",
+      "pad_color": "218, 226, 224",
+      "crop_position": "center",
+      "divisible_by": 2,
+      "device": "cpu",
+      "image": [
+        "100",
+        0
+      ],
+      "mask": [
+        "100",
+        1
+      ]
+    }
+  },
+  "110": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "49ff5041e8e976b682b22e82d7f98d20948e2171eba81a62a31d04b2f3a995ac.png"
+    }
+  },
+  "111": {
+    "class_type": "ImageResizeKJv2",
+    "inputs": {
+      "width": 1056,
+      "height": 1440,
+      "upscale_method": "lanczos",
+      "keep_proportion": "stretch",
+      "pad_color": "0, 0, 0",
+      "crop_position": "center",
+      "divisible_by": 2,
+      "device": "cpu",
+      "image": [
+        "110",
+        0
+      ],
+      "mask": [
+        "110",
+        1
+      ]
+    }
+  },
+  "112": {
+    "class_type": "JoinImageWithAlpha",
+    "inputs": {
+      "image": [
+        "111",
+        0
+      ],
+      "alpha": [
+        "111",
+        3
+      ]
+    }
+  },
+  "113": {
+    "class_type": "MaskComposite",
+    "inputs": {
+      "x": 0,
+      "y": 0,
+      "operation": "multiply",
+      "destination": [
+        "132",
+        0
+      ],
+      "source": [
+        "157",
+        0
+      ]
+    }
+  },
+  "114": {
+    "class_type": "LayerUtility: ImageBlend V2",
+    "inputs": {
+      "invert_mask": false,
+      "blend_mode": "screen",
+      "opacity": 85,
+      "background_image": [
+        "50",
+        0
+      ],
+      "layer_image": [
+        "131",
+        0
+      ],
+      "layer_mask": [
+        "113",
+        0
+      ]
+    }
+  },
+  "115": {
+    "class_type": "InvertMask",
+    "inputs": {
+      "mask": [
+        "113",
+        0
+      ]
+    }
+  },
+  "116": {
+    "class_type": "JoinImageWithAlpha",
+    "inputs": {
+      "image": [
+        "131",
+        0
+      ],
+      "alpha": [
+        "115",
+        0
+      ]
+    }
+  },
+  "117": {
+    "class_type": "SaveImage",
+    "inputs": {
+      "filename_prefix": "CC/L6_foil",
+      "images": [
+        "116",
+        0
+      ]
+    }
+  },
+  "120": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "Holographic foil texture for a collectible trading card on a pure black background. Thin radial light streaks in iridescent rainbow colors (cyan, magenta, yellow and violet) radiate from the center of the frame, overlaid with fine prismatic glitter and about a dozen small four-point starburst sparkles scattered evenly across the frame. The black stays pure black between the streaks. The image contains only abstract light, with no objects, letters or numbers.",
+      "clip": [
+        "2",
+        0
+      ]
+    }
+  },
+  "121": {
+    "class_type": "ConditioningZeroOut",
+    "inputs": {
+      "conditioning": [
+        "120",
+        0
+      ]
+    }
+  },
+  "122": {
+    "class_type": "CFGGuider",
+    "inputs": {
+      "cfg": 1,
+      "model": [
+        "1",
+        0
+      ],
+      "positive": [
+        "120",
+        0
+      ],
+      "negative": [
+        "121",
+        0
+      ]
+    }
+  },
+  "123": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": 777
+    }
+  },
+  "124": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": [
+        "123",
+        0
+      ],
+      "guider": [
+        "122",
+        0
+      ],
+      "sampler": [
+        "4",
+        0
+      ],
+      "sigmas": [
+        "5",
+        0
+      ],
+      "latent_image": [
+        "6",
+        0
+      ]
+    }
+  },
+  "125": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "124",
+        0
+      ],
+      "vae": [
+        "3",
+        0
+      ]
+    }
+  },
+  "126": {
+    "class_type": "ImageDesaturate+",
+    "inputs": {
+      "factor": 1.0,
+      "method": "luminance (Rec.709)",
+      "image": [
+        "131",
+        0
+      ]
+    }
+  },
+  "127": {
+    "class_type": "ImageToMask",
+    "inputs": {
+      "channel": "red",
+      "image": [
+        "126",
+        0
+      ]
+    }
+  },
+  "128": {
+    "class_type": "SolidMask",
+    "inputs": {
+      "value": 0.0,
+      "width": 1056,
+      "height": 1440
+    }
+  },
+  "129": {
+    "class_type": "JoinImageWithAlpha",
+    "inputs": {
+      "image": [
+        "125",
+        0
+      ],
+      "alpha": [
+        "128",
+        0
+      ]
+    }
+  },
+  "130": {
+    "class_type": "LazySwitchKJ",
+    "inputs": {
+      "switch": [
+        "311",
+        2
+      ],
+      "on_false": [
+        "112",
+        0
+      ],
+      "on_true": [
+        "129",
+        0
+      ]
+    }
+  },
+  "131": {
+    "class_type": "SplitImageWithAlpha",
+    "inputs": {
+      "image": [
+        "130",
+        0
+      ]
+    }
+  },
+  "132": {
+    "class_type": "InvertMask",
+    "inputs": {
+      "mask": [
+        "131",
+        1
+      ]
+    }
+  },
+  "133": {
+    "class_type": "MaskComposite",
+    "inputs": {
+      "x": 0,
+      "y": 0,
+      "operation": "multiply",
+      "destination": [
+        "113",
+        0
+      ],
+      "source": [
+        "127",
+        0
+      ]
+    }
+  },
+  "140": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "49ff5041e8e976b682b22e82d7f98d20948e2171eba81a62a31d04b2f3a995ac.png"
+    }
+  },
+  "141": {
+    "class_type": "ImageResizeKJv2",
+    "inputs": {
+      "width": 1056,
+      "height": 1440,
+      "upscale_method": "lanczos",
+      "keep_proportion": "crop",
+      "pad_color": "0, 0, 0",
+      "crop_position": "center",
+      "divisible_by": 2,
+      "device": "cpu",
+      "image": [
+        "140",
+        0
+      ],
+      "mask": [
+        "140",
+        1
+      ]
+    }
+  },
+  "142": {
+    "class_type": "LazySwitchKJ",
+    "inputs": {
+      "switch": [
+        "301",
+        2
+      ],
+      "on_false": [
+        "141",
+        0
+      ],
+      "on_true": [
+        "25",
+        0
+      ]
+    }
+  },
+  "150": {
+    "class_type": "InvertMask",
+    "inputs": {
+      "mask": [
+        "33",
+        0
+      ]
+    }
+  },
+  "151": {
+    "class_type": "JoinImageWithAlpha",
+    "inputs": {
+      "image": [
+        "43",
+        0
+      ],
+      "alpha": [
+        "150",
+        0
+      ]
+    }
+  },
+  "152": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "49ff5041e8e976b682b22e82d7f98d20948e2171eba81a62a31d04b2f3a995ac.png"
+    }
+  },
+  "153": {
+    "class_type": "ImageResizeKJv2",
+    "inputs": {
+      "width": 1056,
+      "height": 1440,
+      "upscale_method": "lanczos",
+      "keep_proportion": "resize",
+      "pad_color": "0, 0, 0",
+      "crop_position": "center",
+      "divisible_by": 2,
+      "device": "cpu",
+      "image": [
+        "152",
+        0
+      ],
+      "mask": [
+        "152",
+        1
+      ]
+    }
+  },
+  "154": {
+    "class_type": "JoinImageWithAlpha",
+    "inputs": {
+      "image": [
+        "190",
+        0
+      ],
+      "alpha": [
+        "193",
+        0
+      ]
+    }
+  },
+  "155": {
+    "class_type": "LazySwitchKJ",
+    "inputs": {
+      "switch": [
+        "303",
+        2
+      ],
+      "on_false": [
+        "154",
+        0
+      ],
+      "on_true": [
+        "151",
+        0
+      ]
+    }
+  },
+  "156": {
+    "class_type": "SplitImageWithAlpha",
+    "inputs": {
+      "image": [
+        "155",
+        0
+      ]
+    }
+  },
+  "157": {
+    "class_type": "LazySwitchKJ",
+    "inputs": {
+      "switch": [
+        "309",
+        2
+      ],
+      "on_false": [
+        "162",
+        0
+      ],
+      "on_true": [
+        "31",
+        0
+      ]
+    }
+  },
+  "158": {
+    "class_type": "InvertMask",
+    "inputs": {
+      "mask": [
+        "156",
+        1
+      ]
+    }
+  },
+  "160": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "49ff5041e8e976b682b22e82d7f98d20948e2171eba81a62a31d04b2f3a995ac.png"
+    }
+  },
+  "161": {
+    "class_type": "ImageResizeKJv2",
+    "inputs": {
+      "width": 1056,
+      "height": 1440,
+      "upscale_method": "lanczos",
+      "keep_proportion": "stretch",
+      "pad_color": "0, 0, 0",
+      "crop_position": "center",
+      "divisible_by": 2,
+      "device": "cpu",
+      "image": [
+        "160",
+        0
+      ],
+      "mask": [
+        "160",
+        1
+      ]
+    }
+  },
+  "162": {
+    "class_type": "ImageToMask",
+    "inputs": {
+      "channel": "red",
+      "image": [
+        "161",
+        0
+      ]
+    }
+  },
+  "163": {
+    "class_type": "InvertMask",
+    "inputs": {
+      "mask": [
+        "34",
+        0
+      ]
+    }
+  },
+  "164": {
+    "class_type": "JoinImageWithAlpha",
+    "inputs": {
+      "image": [
+        "46",
+        0
+      ],
+      "alpha": [
+        "163",
+        0
+      ]
+    }
+  },
+  "165": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "49ff5041e8e976b682b22e82d7f98d20948e2171eba81a62a31d04b2f3a995ac.png"
+    }
+  },
+  "166": {
+    "class_type": "ImageResizeKJv2",
+    "inputs": {
+      "width": 1056,
+      "height": 1440,
+      "upscale_method": "lanczos",
+      "keep_proportion": "resize",
+      "pad_color": "0, 0, 0",
+      "crop_position": "center",
+      "divisible_by": 2,
+      "device": "cpu",
+      "image": [
+        "165",
+        0
+      ],
+      "mask": [
+        "165",
+        1
+      ]
+    }
+  },
+  "167": {
+    "class_type": "JoinImageWithAlpha",
+    "inputs": {
+      "image": [
+        "191",
+        0
+      ],
+      "alpha": [
+        "194",
+        0
+      ]
+    }
+  },
+  "168": {
+    "class_type": "LazySwitchKJ",
+    "inputs": {
+      "switch": [
+        "305",
+        2
+      ],
+      "on_false": [
+        "167",
+        0
+      ],
+      "on_true": [
+        "164",
+        0
+      ]
+    }
+  },
+  "169": {
+    "class_type": "SplitImageWithAlpha",
+    "inputs": {
+      "image": [
+        "168",
+        0
+      ]
+    }
+  },
+  "170": {
+    "class_type": "InvertMask",
+    "inputs": {
+      "mask": [
+        "169",
+        1
+      ]
+    }
+  },
+  "171": {
+    "class_type": "InvertMask",
+    "inputs": {
+      "mask": [
+        "48",
+        1
+      ]
+    }
+  },
+  "172": {
+    "class_type": "JoinImageWithAlpha",
+    "inputs": {
+      "image": [
+        "49",
+        0
+      ],
+      "alpha": [
+        "171",
+        0
+      ]
+    }
+  },
+  "173": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "49ff5041e8e976b682b22e82d7f98d20948e2171eba81a62a31d04b2f3a995ac.png"
+    }
+  },
+  "174": {
+    "class_type": "ImageResizeKJv2",
+    "inputs": {
+      "width": 1056,
+      "height": 1440,
+      "upscale_method": "lanczos",
+      "keep_proportion": "resize",
+      "pad_color": "0, 0, 0",
+      "crop_position": "center",
+      "divisible_by": 2,
+      "device": "cpu",
+      "image": [
+        "173",
+        0
+      ],
+      "mask": [
+        "173",
+        1
+      ]
+    }
+  },
+  "175": {
+    "class_type": "JoinImageWithAlpha",
+    "inputs": {
+      "image": [
+        "192",
+        0
+      ],
+      "alpha": [
+        "195",
+        0
+      ]
+    }
+  },
+  "176": {
+    "class_type": "LazySwitchKJ",
+    "inputs": {
+      "switch": [
+        "307",
+        2
+      ],
+      "on_false": [
+        "175",
+        0
+      ],
+      "on_true": [
+        "172",
+        0
+      ]
+    }
+  },
+  "177": {
+    "class_type": "SplitImageWithAlpha",
+    "inputs": {
+      "image": [
+        "176",
+        0
+      ]
+    }
+  },
+  "178": {
+    "class_type": "InvertMask",
+    "inputs": {
+      "mask": [
+        "177",
+        1
+      ]
+    }
+  },
+  "180": {
+    "class_type": "MaskComposite",
+    "inputs": {
+      "x": 0,
+      "y": 0,
+      "operation": "multiply",
+      "destination": [
+        "401",
+        0
+      ],
+      "source": [
+        "157",
+        0
+      ]
+    }
+  },
+  "181": {
+    "class_type": "MaskComposite",
+    "inputs": {
+      "x": 0,
+      "y": 0,
+      "operation": "multiply",
+      "destination": [
+        "158",
+        0
+      ],
+      "source": [
+        "32",
+        0
+      ]
+    }
+  },
+  "182": {
+    "class_type": "MaskComposite",
+    "inputs": {
+      "x": 0,
+      "y": 0,
+      "operation": "multiply",
+      "destination": [
+        "170",
+        0
+      ],
+      "source": [
+        "157",
+        0
+      ]
+    }
+  },
+  "183": {
+    "class_type": "MaskComposite",
+    "inputs": {
+      "x": 0,
+      "y": 0,
+      "operation": "multiply",
+      "destination": [
+        "178",
+        0
+      ],
+      "source": [
+        "157",
+        0
+      ]
+    }
+  },
+  "185": {
+    "class_type": "InvertMask",
+    "inputs": {
+      "mask": [
+        "181",
+        0
+      ]
+    }
+  },
+  "186": {
+    "class_type": "InvertMask",
+    "inputs": {
+      "mask": [
+        "182",
+        0
+      ]
+    }
+  },
+  "187": {
+    "class_type": "InvertMask",
+    "inputs": {
+      "mask": [
+        "183",
+        0
+      ]
+    }
+  },
+  "190": {
+    "class_type": "LayerUtility: ImageBlendAdvance V2",
+    "inputs": {
+      "invert_mask": true,
+      "blend_mode": "normal",
+      "opacity": 100,
+      "x_percent": 50.0,
+      "y_percent": 50.0,
+      "mirror": "None",
+      "scale": 1.0,
+      "aspect_ratio": 1.0,
+      "rotate": 0.0,
+      "transform_method": "lanczos",
+      "anti_aliasing": 0,
+      "background_image": [
+        "40",
+        0
+      ],
+      "layer_image": [
+        "153",
+        0
+      ],
+      "layer_mask": [
+        "153",
+        3
+      ]
+    }
+  },
+  "191": {
+    "class_type": "LayerUtility: ImageBlendAdvance V2",
+    "inputs": {
+      "invert_mask": true,
+      "blend_mode": "normal",
+      "opacity": 100,
+      "x_percent": 50.0,
+      "y_percent": 50.0,
+      "mirror": "None",
+      "scale": 1.0,
+      "aspect_ratio": 1.0,
+      "rotate": 0.0,
+      "transform_method": "lanczos",
+      "anti_aliasing": 0,
+      "background_image": [
+        "40",
+        0
+      ],
+      "layer_image": [
+        "166",
+        0
+      ],
+      "layer_mask": [
+        "166",
+        3
+      ]
+    }
+  },
+  "192": {
+    "class_type": "LayerUtility: ImageBlendAdvance V2",
+    "inputs": {
+      "invert_mask": true,
+      "blend_mode": "normal",
+      "opacity": 100,
+      "x_percent": 50.0,
+      "y_percent": 50.0,
+      "mirror": "None",
+      "scale": 1.0,
+      "aspect_ratio": 1.0,
+      "rotate": 0.0,
+      "transform_method": "lanczos",
+      "anti_aliasing": 0,
+      "background_image": [
+        "40",
+        0
+      ],
+      "layer_image": [
+        "174",
+        0
+      ],
+      "layer_mask": [
+        "174",
+        3
+      ]
+    }
+  },
+  "193": {
+    "class_type": "InvertMask",
+    "inputs": {
+      "mask": [
+        "190",
+        1
+      ]
+    }
+  },
+  "194": {
+    "class_type": "InvertMask",
+    "inputs": {
+      "mask": [
+        "191",
+        1
+      ]
+    }
+  },
+  "195": {
+    "class_type": "InvertMask",
+    "inputs": {
+      "mask": [
+        "192",
+        1
+      ]
+    }
+  },
+  "208": {
+    "class_type": "LazySwitchKJ",
+    "inputs": {
+      "switch": true,
+      "on_false": [
+        "101",
+        0
+      ],
+      "on_true": [
+        "224",
+        0
+      ]
+    }
+  },
+  "210": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "qwen_image_edit_2511_bf16.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "211": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "qwen_2.5_vl_7b.safetensors",
+      "type": "qwen_image",
+      "device": "default"
+    }
+  },
+  "212": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "qwen_image_vae.safetensors"
+    }
+  },
+  "213": {
+    "class_type": "ModelSamplingAuraFlow",
+    "inputs": {
+      "shift": 3.1,
+      "model": [
+        "210",
+        0
+      ]
+    }
+  },
+  "214": {
+    "class_type": "CFGNorm",
+    "inputs": {
+      "strength": 1.0,
+      "model": [
+        "213",
+        0
+      ]
+    }
+  },
+  "216": {
+    "class_type": "FluxKontextImageScale",
+    "inputs": {
+      "image": [
+        "101",
+        0
+      ]
+    }
+  },
+  "217": {
+    "class_type": "TextEncodeQwenImageEditPlus",
+    "inputs": {
+      "prompt": "Enhance this artwork for print: clean, crisp, even black outlines, smooth flat color fills, sharper details and no noise or compression artifacts. Keep exactly the same character, pose, colors, proportions and composition. Plain flat light grey background. No text.",
+      "clip": [
+        "211",
+        0
+      ],
+      "vae": [
+        "212",
+        0
+      ],
+      "image1": [
+        "216",
+        0
+      ]
+    }
+  },
+  "218": {
+    "class_type": "TextEncodeQwenImageEditPlus",
+    "inputs": {
+      "prompt": "",
+      "clip": [
+        "211",
+        0
+      ],
+      "vae": [
+        "212",
+        0
+      ],
+      "image1": [
+        "216",
+        0
+      ]
+    }
+  },
+  "219": {
+    "class_type": "FluxKontextMultiReferenceLatentMethod",
+    "inputs": {
+      "reference_latents_method": "index_timestep_zero",
+      "conditioning": [
+        "217",
+        0
+      ]
+    }
+  },
+  "220": {
+    "class_type": "FluxKontextMultiReferenceLatentMethod",
+    "inputs": {
+      "reference_latents_method": "index_timestep_zero",
+      "conditioning": [
+        "218",
+        0
+      ]
+    }
+  },
+  "221": {
+    "class_type": "VAEEncode",
+    "inputs": {
+      "pixels": [
+        "216",
+        0
+      ],
+      "vae": [
+        "212",
+        0
+      ]
+    }
+  },
+  "222": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": 9001,
+      "steps": 40,
+      "cfg": 4.0,
+      "sampler_name": "euler",
+      "scheduler": "simple",
+      "denoise": 1.0,
+      "model": [
+        "214",
+        0
+      ],
+      "positive": [
+        "219",
+        0
+      ],
+      "negative": [
+        "220",
+        0
+      ],
+      "latent_image": [
+        "221",
+        0
+      ]
+    }
+  },
+  "223": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": [
+        "222",
+        0
+      ],
+      "vae": [
+        "212",
+        0
+      ]
+    }
+  },
+  "224": {
+    "class_type": "ImageResizeKJv2",
+    "inputs": {
+      "width": 832,
+      "height": 576,
+      "upscale_method": "lanczos",
+      "keep_proportion": "stretch",
+      "pad_color": "218, 226, 224",
+      "crop_position": "center",
+      "divisible_by": 2,
+      "device": "cpu",
+      "image": [
+        "223",
+        0
+      ]
+    }
+  },
+  "300": {
+    "class_type": "GetImageSize",
+    "inputs": {
+      "image": [
+        "140",
+        0
+      ]
+    }
+  },
+  "301": {
+    "class_type": "ComfyMathExpression",
+    "inputs": {
+      "expression": "a < 16",
+      "values.a": [
+        "300",
+        0
+      ]
+    }
+  },
+  "302": {
+    "class_type": "GetImageSize",
+    "inputs": {
+      "image": [
+        "152",
+        0
+      ]
+    }
+  },
+  "303": {
+    "class_type": "ComfyMathExpression",
+    "inputs": {
+      "expression": "a < 16",
+      "values.a": [
+        "302",
+        0
+      ]
+    }
+  },
+  "304": {
+    "class_type": "GetImageSize",
+    "inputs": {
+      "image": [
+        "165",
+        0
+      ]
+    }
+  },
+  "305": {
+    "class_type": "ComfyMathExpression",
+    "inputs": {
+      "expression": "a < 16",
+      "values.a": [
+        "304",
+        0
+      ]
+    }
+  },
+  "306": {
+    "class_type": "GetImageSize",
+    "inputs": {
+      "image": [
+        "173",
+        0
+      ]
+    }
+  },
+  "307": {
+    "class_type": "ComfyMathExpression",
+    "inputs": {
+      "expression": "a < 16",
+      "values.a": [
+        "306",
+        0
+      ]
+    }
+  },
+  "308": {
+    "class_type": "GetImageSize",
+    "inputs": {
+      "image": [
+        "160",
+        0
+      ]
+    }
+  },
+  "309": {
+    "class_type": "ComfyMathExpression",
+    "inputs": {
+      "expression": "a < 16",
+      "values.a": [
+        "308",
+        0
+      ]
+    }
+  },
+  "310": {
+    "class_type": "GetImageSize",
+    "inputs": {
+      "image": [
+        "110",
+        0
+      ]
+    }
+  },
+  "311": {
+    "class_type": "ComfyMathExpression",
+    "inputs": {
+      "expression": "a < 16",
+      "values.a": [
+        "310",
+        0
+      ]
+    }
+  },
+  "400": {
+    "class_type": "ImageCompositeMasked",
+    "inputs": {
+      "x": 112,
+      "y": 184,
+      "resize_source": false,
+      "destination": [
+        "40",
+        0
+      ],
+      "source": [
+        "208",
+        0
+      ]
+    }
+  },
+  "401": {
+    "class_type": "MaskComposite",
+    "inputs": {
+      "x": 112,
+      "y": 184,
+      "operation": "add",
+      "destination": [
+        "128",
+        0
+      ],
+      "source": [
+        "16",
+        1
+      ]
+    }
+  }
+}
