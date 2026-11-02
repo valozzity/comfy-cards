@@ -22,7 +22,7 @@ type Params = {
   mode: Mode; name: string; subjectPrompt?: string; enhance?: boolean; enhancePrompt?: string;
   backgroundPrompt: string; foilPrompt: string; foilStrength: number; foilArea: string; seeds: Seeds;
   uploads?: Partial<Record<"subject" | LayerSlot, string>>;
-  window: Rect;
+  window: Rect; textBox?: Rect;
 };
 // what the dropdowns resolved to for this card (shown as chips; reused by "New background")
 type Picks = {
@@ -405,6 +405,7 @@ export default function Page() {
         const common = {
           mode, name: cardName, backgroundPrompt: b.backgroundPrompt, foilPrompt: b.foilPrompt, foilStrength, seeds, uploads,
           foilArea: layout.fullArt && foilArea === "frame" ? "card" : foilArea, window: layout.window,
+          textBox: layout.fullArt ? undefined : layout.text,
         };
         if (mode === "generate") {
           const style = choose(STYLES, styleId, styleCustom);
@@ -499,7 +500,7 @@ export default function Page() {
       const redone = [o.character && (o.variation ? "variation" : "character"), o.background && "background", o.foil && "foil"].filter(Boolean);
       launch([{
         params: {
-          mode: "upload", name: o.name, uploads, foilStrength: p.foilStrength, foilArea: p.foilArea, window: p.window,
+          mode: "upload", name: o.name, uploads, foilStrength: p.foilStrength, foilArea: p.foilArea, window: p.window, textBox: p.textBox,
           enhance: o.character, enhancePrompt: o.variation || !note ? VARIATION_PROMPT : editPrompt(note),
           backgroundPrompt: bgPrompt, foilPrompt,
           seeds: { subject: seed(), background: o.background ? seed() : p.seeds.background, foil: o.foil ? seed() : p.seeds.foil },

@@ -108,7 +108,15 @@ export async function drawDie(): Promise<Blob> {
 /** The card frame: full bleed, with the art window cut out. Classic also carries the description box. */
 export async function drawFrame(style: string, color: Swatch, layout: Layout): Promise<Blob> {
   const { c, g } = canvas();
-  if (style === "off") return toBlob(c);
+  if (style === "off") {
+    // no frame, but Classic still needs a readable description box over the background
+    if (!layout.fullArt && layout.text) {
+      rrect(g, layout.text, 18);
+      g.fillStyle = "rgba(245, 243, 238, 0.94)";
+      g.fill();
+    }
+    return toBlob(c);
+  }
   const edge = style === "holo" ? "#8d9096" : shade(color.hex, 0.55);
   if (style === "holo") g.fillStyle = SILVER;
   else if (style === "gradient") {

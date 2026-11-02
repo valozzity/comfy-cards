@@ -63,6 +63,7 @@ export type RunParams = {
   seeds: { subject: number; background: number; foil: number };
   uploads?: Partial<Record<"subject" | keyof typeof LAYER_LOADERS, string>>; // Comfy input file names
   window: Rect; // art window on the 1056 x 1440 card canvas; the subject is made at this size and placed here
+  textBox?: Rect; // Classic description box: kept free of foil so the text stays readable
 };
 
 // Empty layer slots load a tiny placeholder (the workflow switches on its < 16 px width to the template / generated
@@ -123,14 +124,22 @@ export function buildGraph(p: RunParams, jobId: string, blank: string): Graph {
   const mask = (id: string, operation: string, from: string, by: string) =>
     (g[id] = { class_type: "MaskComposite", inputs: { x: 0, y: 0, operation, destination: [from, 0], source: [by, 0] } });
   let foil = "113";
+  mask("961", "subtract", "113", "183"); // never over the text itself
+  foil = "961";
+  if (p.textBox) {
+    const t = p.textBox;
+    g["960"] = { class_type: "CreateShapeMask", inputs: { ...g["30"].inputs, location_x: t.x + t.w / 2, location_y: t.y + t.h / 2, shape_width: t.w, shape_height: t.h } };
+    mask("962", "subtract", "961", "960");
+    foil = "962";
+  }
   if (p.foilArea === "window") {
-    mask("950", "multiply", "113", "30");
+    mask("950", "multiply", foil, "30");
     mask("951", "subtract", "950", "180");
     mask("952", "subtract", "951", "182");
     mask("953", "subtract", "952", "183");
     foil = "953";
   } else if (p.foilArea === "frame") {
-    mask("950", "subtract", "113", "30");
+    mask("950", "subtract", foil, "30");
     mask("951", "subtract", "950", "182");
     mask("952", "subtract", "951", "183");
     foil = "952";
